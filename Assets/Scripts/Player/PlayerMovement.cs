@@ -15,7 +15,6 @@ public class PlayerMovement : MonoBehaviour, ISaveableComponent
         _inputs = GetComponent<PlayerInputs>();
         _inputs.onMove += HandleTranslation;
         _inputs.onRotate += HandleRotation;
-        SaveManager.instance.movement = this;
     }
 
     private void HandleTranslation(float value)
@@ -30,14 +29,14 @@ public class PlayerMovement : MonoBehaviour, ISaveableComponent
 
     public void Save(GameData data)
     {
-        SaveManager.instance.GameData.name = gameObject.name;
-        SaveManager.instance.GameData.position = transform.position;
-        SaveManager.instance.GameData.rotation = transform.rotation;
+        data.name = gameObject.name;
+        data.position = transform.position;
+        data.rotation = transform.rotation;
     }
 
-    public void Load()
+    public void Load(GameData data)
     {
-        transform.position = SaveManager.instance.GameData.position;
-        transform.rotation = SaveManager.instance.GameData.rotation;
+        transform.position = data.position;
+        transform.rotation = data.rotation;
     }
 }

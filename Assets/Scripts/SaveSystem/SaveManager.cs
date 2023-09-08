@@ -8,18 +8,14 @@ public class SaveManager : MonoBehaviour
     private const string fileName = "saveData.txt";
 
     public static SaveManager instance;
-    private GameData gameData;
+    //private GameData gameData;
     private FileDataHandler dataHandler;
-    public PlayerMovement movement;
     private List<ISaveable> saveableObjects = new List<ISaveable>();
-
-    public GameData GameData { get => gameData; set => gameData = value; }
 
     private void Awake()
     {
         instance = this;
-        dataHandler = new FileDataHandler(directory, fileName);
-        movement = FindObjectOfType<PlayerMovement>();
+        dataHandler = new FileDataHandler(directory);
     }
 
     private void Start()
@@ -29,9 +25,6 @@ public class SaveManager : MonoBehaviour
 
     public void Load()
     {
-        gameData = dataHandler.ReadFromFile();
-        if (gameData == null) NewGame();
-
         foreach (var saveable in saveableObjects)
         {
             saveable.LoadAll();
@@ -40,16 +33,15 @@ public class SaveManager : MonoBehaviour
 
     private void NewGame()
     {
-        gameData = new GameData();
+        
     }
 
     public void Save()
     {
         foreach(var saveable in saveableObjects)
         {
-            saveable.SaveAll(gameData);
+            dataHandler.WriteInFile(saveable.SaveAll());
         }
-        dataHandler.WriteInFile(gameData);
     }
 
     public void SubscriveSaveableObject(ISaveable saveable)
@@ -66,5 +58,10 @@ public class SaveManager : MonoBehaviour
         {
             saveableObjects.Remove(saveable);
         }
+    }
+
+    public void LoadFromFileInto<T>(out T data, string fileName) where T: GameData
+    {
+        data = dataHandler.ReadFromFile<T>(fileName);
     }
 }

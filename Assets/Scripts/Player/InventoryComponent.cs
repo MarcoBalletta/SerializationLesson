@@ -6,13 +6,15 @@ public class InventoryComponent : MonoBehaviour, ISaveableComponent
 {
     public int ammos;
 
-    public void Load()
+    public void Load(GameData data)
     {
-        ammos = SaveManager.instance.GameData.ammos;   
+        if(data is PlayerData)
+            ammos = (data as PlayerData).ammos;   
     }
 
     public void Save(GameData data)
     {
-        data.ammos = ammos;
+        if(data is PlayerData)
+            ((PlayerData)data).ammos = ammos;
     }
 }

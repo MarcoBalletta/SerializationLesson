@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 public interface ISaveable
 {
-    public void SaveAll(GameData data);
+    public ReturnedSaveableData SaveAll();
     public void LoadAll();
+}
+
+public struct ReturnedSaveableData
+{
+    public string fileName;
+    public GameData data;
 }
